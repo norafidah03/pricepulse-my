@@ -63,7 +63,49 @@ EATING_OUT_CATEGORIES = {
     "NASI": "Rice dishes", "LAUK": "Side dishes (lauk)", "MEE / BIHUN / KUEY TEOW": "Noodle dishes",
     "MINUMAN": "Drinks (restaurant)", "LAIN-LAIN": "Other cooked food",
 }
-# Category weights in the state index. None = equal weight per category (the current default,
-# because DOSM's food sub-group weights are not published as a dataset). Fill in a dict
-# {category: weight} to switch to expenditure weights; weights are normalised to sum to 1.
-CATEGORY_WEIGHTS: dict[str, float] | None = None
+# ---- Category weights ----
+# DOSM CPI weights (% of the whole CPI basket) for the "Food at home" expenditure classes plus
+# non-alcoholic beverages, Malaysia, weight reference period 2022 (HES 2022), used from Jan 2024.
+# Source: DOSM, Consumer Price Index Malaysia 2024 annual publication, Table 9 (Jadual 9), "Wajaran / Weight" row:
+# https://www.dosm.gov.my/uploads/release-content/file_20260518103117.pdf
+DOSM_CLASS_WEIGHTS = {
+    "Cereals & cereal products": 2.3,
+    "Meat": 2.3,
+    "Fish & seafood": 3.9,
+    "Milk, other dairy products & eggs": 1.3,
+    "Oils & fats": 0.7,
+    "Fruits & nuts": 1.1,
+    "Vegetables": 1.8,
+    "Sugar, confectionery & desserts": 0.5,
+    "Ready-made food & other food products n.e.c.": 1.7,
+    "Non-alcoholic beverages": 0.8,
+}
+# Which DOSM class each of our categories belongs to. A class's weight is split equally
+# between our categories in it (e.g. Meat 2.3 -> Chicken 1.15, Beef & mutton 1.15).
+CATEGORY_TO_DOSM_CLASS = {
+    "Rice": "Cereals & cereal products",
+    "Flour, bread & noodles": "Cereals & cereal products",
+    "Chicken": "Meat",
+    "Beef & mutton": "Meat",
+    "Fish & seafood": "Fish & seafood",
+    "Milk & baby food": "Milk, other dairy products & eggs",
+    "Eggs": "Milk, other dairy products & eggs",
+    "Cooking oil": "Oils & fats",
+    "Fruit & coconut": "Fruits & nuts",
+    "Vegetables": "Vegetables",
+    "Onions, chilli & spices": "Vegetables",
+    "Sugar, spreads & nuts": "Sugar, confectionery & desserts",
+    "Sauces": "Ready-made food & other food products n.e.c.",
+    "Drinks": "Non-alcoholic beverages",
+}
+
+
+def _category_weights() -> dict[str, float]:
+    per_class = {}
+    for cat, cls in CATEGORY_TO_DOSM_CLASS.items():
+        per_class.setdefault(cls, []).append(cat)
+    return {cat: DOSM_CLASS_WEIGHTS[cls] / len(cats) for cls, cats in per_class.items() for cat in cats}
+
+
+# Weights used in the state index (normalised to sum to 1 when used). Set to None for equal weights.
+CATEGORY_WEIGHTS: dict[str, float] | None = _category_weights()

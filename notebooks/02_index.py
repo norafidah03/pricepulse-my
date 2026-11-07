@@ -29,7 +29,7 @@ print(f"Index runs Jan 2022 = 100 to {LAST:%b %Y}")
 
 # %% [markdown]
 # ## 1. National trend
-# Most of the rise happened in 2022. Since 2023 the year-on-year change has stayed between about -1% and +3%.
+# Most of the rise happened in 2022. Since then the year-on-year change has stayed between about -0.3% and +3%.
 
 # %%
 nat = state[state["state"] == "Malaysia"]
@@ -52,7 +52,7 @@ now[["state", "index", "yoy_pct", "yoy3m_pct"]].round(1)
 # %% [markdown]
 # ## 3. What drives each state's change?
 # Contribution of each category, in percentage points, to the year-on-year change in Oct 2026.
-# The contributions add up to the state's total.
+# The contributions add up to the state's total. Categories use DOSM CPI weights (config.CATEGORY_WEIGHTS).
 
 # %%
 c = yoy_contributions(state, contrib, LAST)
@@ -60,7 +60,7 @@ table = c.pivot(index="category", columns="state", values="pp").round(2)
 fig = px.imshow(table, color_continuous_scale="RdBu_r", color_continuous_midpoint=0, aspect="auto",
                 title="Contribution to year-on-year change, Oct 2026 (percentage points)")
 fig.write_html(REPORTS / "02_drivers_heatmap.html")
-table[["Malaysia", "Kelantan", "Kedah", "Sabah", "W.P. Labuan"]]
+table[["Malaysia", "Kedah", "Kelantan", "Sabah", "W.P. Labuan"]]
 
 # %% [markdown]
 # ## 4. How stable are the rankings?

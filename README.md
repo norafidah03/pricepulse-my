@@ -24,13 +24,14 @@ pytest
 - PriceCatcher daily item prices by premise, KPDN via data.gov.my (`storage.data.gov.my/pricecatcher/`), Jan 2022 onwards
 - PriceCatcher item and premise lookups (same location)
 - Consumer Price Index by state and division, DOSM via OpenDOSM (`cpi_2d_state`), used only to check our numbers
+- CPI food weights, DOSM CPI Malaysia 2024 annual publication (Table 9), used to weight categories
 
 PricePulse reports **observed price changes** in PriceCatcher. These are not official inflation statistics;
 DOSM's CPI is shown separately and labelled as such.
 
 ## Findings so far
-- Observed grocery prices in Malaysia are 10.9% higher than in January 2022, mostly from 2022.
-- Aug to Oct 2026 vs a year earlier: +1.4% nationally; Kelantan and Kedah fastest (+2.2%), Sabah and Labuan flat.
-- States differ by only about 1 to 2 percentage points; vegetables, beef, onions/chilli and chicken drive the current rise.
+- Observed grocery prices in Malaysia are 9.7% higher than in January 2022, mostly from 2022.
+- Aug to Oct 2026 vs a year earlier: +1.2% nationally; Kedah fastest (+2.3%); prices fell in Sabah (-1.2%) and Labuan.
+- States differ by only about 1.5 percentage points; beef, vegetables, onions/chilli and chicken drive the current rise.
 
 Details: [docs/FINDINGS_01.md](docs/FINDINGS_01.md).

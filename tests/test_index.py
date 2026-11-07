@@ -55,7 +55,7 @@ def test_item_links_jevons_and_imputation():
 def test_aggregate_renormalises_missing_categories_and_contributions_add_up():
     cat = pd.DataFrame({"month": [M("2025-02-01")] * 2, "state": ["A"] * 2,
                         "category": ["Eggs", "Rice"], "log_link": [0.10, 0.0]})
-    w = weights_for(["Eggs", "Rice", "Chicken"])  # Chicken missing this month
+    w = weights_for(["Eggs", "Rice", "Chicken"], weights=None)  # equal weights; Chicken missing this month
     total, contrib = aggregate_links(cat, ["month", "state"], w)
     assert total["log_link"].iloc[0] == pytest.approx(0.05)
     assert contrib["contrib"].sum() == pytest.approx(total["log_link"].iloc[0])
@@ -77,3 +77,11 @@ def test_yoy3m_compares_same_three_months():
     level = [100.0] * 12 + [110.0] * 3   # flat for a year, then 10% higher for 3 months
     idx = add_changes(pd.DataFrame({"month": months, "state": "A", "index": level}), ["state"])
     assert idx["yoy3m_pct"].iloc[-1] == pytest.approx(10.0)
+
+
+def test_dosm_weights_cover_every_category_and_split_classes():
+    from src.pricepulse import config
+    w = config.CATEGORY_WEIGHTS
+    assert set(w) == set(config.GROCERY_CATEGORIES.values())
+    assert w["Chicken"] == w["Beef & mutton"] == pytest.approx(2.3 / 2)
+    assert sum(w.values()) == pytest.approx(sum(config.DOSM_CLASS_WEIGHTS.values()))

@@ -17,7 +17,7 @@ The full, editable plan lives in the project doc. This is the short version kept
 2. Flag prices more than 3x or less than 1/3 of the item's national median that month.
 3. Matched pairs: a shop's price for an item this month vs the same shop last month.
 4. Item index per state = geometric mean of those price relatives (Jevons), chained, Jan 2022 = 100.
-5. 14 categories, equal weight each (DOSM sub-group weights are not published as data; configurable).
+5. 14 categories weighted with DOSM CPI food class weights (CPI 2024 annual publication, Table 9).
 6. Headline: last 3 months vs the same 3 months a year earlier. Plus each category's contribution in percentage points.
 7. Staples basket (~20 items) priced at each state's median.
 8. Validate against DOSM `cpi_2d_state` division 01.
