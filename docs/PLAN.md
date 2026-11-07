@@ -35,5 +35,5 @@ Light background, deep teal and navy, amber for rises, green for falls. Plain la
 2. M2 Index (Q1) with tests. FINDINGS_01. **(done)**
 3. M3 Drivers and basket (Q2, Q3). FINDINGS_02, 03. **(done)**
 4. M4 Validation vs DOSM CPI (Q4). FINDINGS_04. **(done)**
-5. M5 Streamlit dashboard with the My Grocery Basket calculator, README. **(done; deploy and portfolio card next)**
-6. M6 Stretch (Q5, Q6).
+5. M5 Streamlit dashboard with the My Grocery Basket calculator, README. **(done)**
+6. M6 Stretch (Q5 policy events, Q6 types of shop and districts). FINDINGS_05. **(done)**

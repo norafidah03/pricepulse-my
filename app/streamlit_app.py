@@ -314,6 +314,20 @@ def page_states() -> None:
     if pick != "Malaysia" and pick in cov.index and cov.loc[pick, "imputed_share"] > 0.25:
         st.info(f"{short_state(pick)} has fewer PriceCatcher shops ({int(cov.loc[pick, 'shops'])}), so for "
                 f"{cov.loc[pick, 'imputed_share']:.0%} of items its index uses the national change. Treat its ranking with care.")
+
+    section("Districts", f"Change in grocery prices on a year ago, {WINDOW}, for districts with enough shops.")
+    dr = load("district_ranking")
+    states_with = [s for s in ranked.index if dr[(dr["state"] == s) & dr["ranked"]].shape[0] > 0]
+    default = states_with.index(pick) if pick in states_with else 0
+    dpick = st.selectbox("State", states_with, index=default, format_func=short_state, key="district_state")
+    d = dr[(dr["state"] == dpick) & dr["ranked"]]
+    left = dr[(dr["state"] == dpick) & ~dr["ranked"]]
+    chart(signed_bars(d, "yoy3m_pct", "district"), f"{short_state(dpick)}: districts, fastest rising first")
+    msg = (f"Districts need at least 10 PriceCatcher shops, and enough matching shops for most items, to be shown. "
+           f"Where a district has fewer than 2 matching shops for an item, it uses the state's change for that item.")
+    if len(left):
+        msg += f" Not shown for {short_state(dpick)}: {', '.join(sorted(left['district']))}."
+    note(msg)
     footer()
 
 
@@ -440,7 +454,7 @@ def page_insights() -> None:
     e0, e1 = e["price"].iloc[0], e["price"].iloc[-1]
     card("2. Eggs have risen most since 2022, and swing more since the subsidy ended",
          f"A tray of 30 grade A eggs went from {rm(e0)} in January 2022 to {rm(e1)} in {e['month'].iloc[-1]:%B %Y}. "
-         "After the egg subsidy and price controls ended in August 2025, prices started moving up and down "
+         "After the egg subsidy ended in August 2025, prices started moving up and down "
          "by 10% or more from month to month.")
     fig = go.Figure(go.Scatter(x=e["month"], y=e["price"], mode="lines", line=dict(color=TEAL, width=2),
                                hovertemplate="%{x|%b %Y}: RM%{y:.2f}<extra></extra>"))
@@ -474,7 +488,82 @@ def page_insights() -> None:
     card("5. Most of the rise since 2022 happened in 2022",
          f"Observed grocery prices rose {y23:.1f}% in the year to January 2023. Since then, yearly changes have mostly "
          f"stayed between 0% and 3%. Overall, groceries are {nat['index'].iloc[-1] - 100:.1f}% dearer than in January 2022.")
+
+    policy_events()
+    where_you_shop()
     footer()
+
+
+def event_verdict(e: pd.Series, m: pd.Series) -> str:
+    """One plain sentence on the 3-month gap and how unusual it is."""
+    seen = (f"none of the other {int(e['n_placebo'])}" if e["p_value"] == 0 else f"{e['p_value']:.0%} of other")
+    ctrl = m["control_label"][0].lower() + m["control_label"][1:]
+    moved = (f"{m['treated_label']}: {e['treated_pct']:+.1f}% in the 3 months from the change, against "
+             f"{e['control_pct']:+.1f}% for {ctrl}.")
+    if e["p_value"] < 0.1:
+        return f"<b>A clear move.</b> {moved} A gap this large showed up in {seen} 3-month spells."
+    return f"<b>No clear effect.</b> {moved} Gaps this large are common: they showed up in {seen} 3-month spells."
+
+
+def policy_events() -> None:
+    section("Did policy changes move prices?",
+            "Four changes, each compared with a group of prices it should not have affected. "
+            "Both lines start at 100 the month before the change.")
+    paths, effects, metas = load("events_paths"), load("events_effects"), load("events_meta").set_index("id")
+    ids = list(metas.index)
+    for row in range(0, len(ids), 2):
+        cols = st.columns(2, gap="large")
+        for col, ev in zip(cols, ids[row:row + 2]):
+            m = metas.loc[ev]
+            p = paths[paths["event"] == ev]
+            e = effects[(effects["event"] == ev) & (effects["k"] == 2)].iloc[0]
+            fig = go.Figure()
+            for grp, name, color, dash, width in [("control", m["control_label"], SLATE, "dot", 2),
+                                                   ("treated", m["treated_label"], TEAL, "solid", 2.5)]:
+                g = p[p["group"] == grp]
+                fig.add_trace(go.Scatter(x=g["month"], y=g["level"], name=name, mode="lines",
+                                         line=dict(color=color, width=width, dash=dash),
+                                         hovertemplate=f"{name}<br>%{{x|%b %Y}}: %{{y:.1f}}<extra></extra>"))
+            t0 = pd.Timestamp(m["date"])
+            fig.add_vline(x=t0.timestamp() * 1000, line_dash="dot", line_color=SLATE)
+            if isinstance(m.get("also"), str):
+                fig.add_vline(x=pd.Timestamp(m["also"]).timestamp() * 1000, line_dash="dot", line_color=NEUTRAL)
+            fig.add_hline(y=100, line_color=NEUTRAL, line_width=1)
+            fig.update_layout(legend=dict(y=-0.2))
+            with col:
+                chart(fig, f"{m['title']} ({m['when']})", 300)
+                note(event_verdict(e, m) + f' <a href="{m["source"]}" target="_blank">About the change</a>.')
+    note("How to read this: the change in the first group minus the change in the comparison group, over the 3 months "
+         "from the change, is set against the same gap for every other 3-month spell since 2022. Eggs use trays of 30, "
+         "the sizes most shops price. Diesel compares the Peninsula, where the subsidy was cut, with Sabah, Sarawak and "
+         "Labuan, where it was not.")
+
+
+def where_you_shop() -> None:
+    section("Does it matter where you shop?",
+            f"The same items in the same state, {WINDOW}, compared with the supermarket price.")
+    lv = load("outlet_levels")
+    oi = load("outlet_index")
+    c1, c2 = st.columns([1, 1], gap="large")
+    with c1:
+        cats = ["All groceries"] + sorted(c for c in lv["category"].unique() if c != "All groceries")
+        pick = st.selectbox("Category", cats, key="outlet_cat")
+        d = lv[lv["category"] == pick]
+        chart(signed_bars(d, "gap_pct", "outlet", height=240), f"{pick}: price compared with supermarkets", 240)
+        note("Amber means dearer than a supermarket, green cheaper. Typical (median) prices, matched on item and state.")
+    with c2:
+        fig = go.Figure()
+        highlight = {"Wet market": TEAL, "Hypermarket": NAVY}
+        for outlet, g in oi.groupby("outlet"):
+            color = highlight.get(outlet, "#B8C2CA")
+            fig.add_trace(go.Scatter(x=g["month"], y=g["index"], name=outlet, mode="lines",
+                                     line=dict(color=color, width=2.5 if outlet in highlight else 1.5),
+                                     hovertemplate=f"{outlet} %{{x|%b %Y}}: %{{y:.1f}}<extra></extra>"))
+        fig.update_layout(legend=dict(y=-0.15))
+        chart(fig, "Price index by type of shop (Jan 2022 = 100)", 340)
+        now = oi[oi["month"] == oi["month"].max()].set_index("outlet")["index"]
+        note(f"Built only from items every type of shop sells, so the lists match. Since January 2022, prices rose "
+             f"{now.max() - 100:.1f}% at {now.idxmax().lower()}s and {now.min() - 100:.1f}% at {now.idxmin().lower()}s.")
 
 
 def page_about() -> None:

@@ -126,6 +126,13 @@ def main() -> None:
     for name in ["national", "classes", "states", "summary"]:
         pd.read_parquet(P / f"validate_{name}.parquet").to_parquet(A / f"validate_{name}.parquet", index=False)
     simplify_geojson(config.RAW / "state.geojson", A / "states.geojson")
+    # M6: policy events, outlet types and districts
+    for name in ["paths", "effects", "meta"]:
+        pd.read_parquet(P / f"events_{name}.parquet").to_parquet(A / f"events_{name}.parquet", index=False)
+    pd.read_parquet(P / "outlet_index.parquet")[["outlet", "month", "index", "yoy3m_pct", "items"]].to_parquet(
+        A / "outlet_index.parquet", index=False)
+    pd.read_parquet(P / "outlet_levels.parquet").to_parquet(A / "outlet_levels.parquet", index=False)
+    pd.read_parquet(P / "district_ranking.parquet").to_parquet(A / "district_ranking.parquet", index=False)
 
     meta = {
         "latest_observation": str(latest),
