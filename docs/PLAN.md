@@ -20,7 +20,7 @@ The full, editable plan lives in the project doc. This is the short version kept
 5. 14 categories weighted with DOSM CPI food class weights (CPI 2024 annual publication, Table 9).
 6. Headline: last 3 months vs the same 3 months a year earlier. Plus each category's contribution in percentage points.
 7. Staples basket (20 items) priced at each state's median over 3 months; rice = any 10 kg imported white rice.
-8. Validate against DOSM `cpi_2d_state` division 01.
+8. Validate against DOSM `cpi_4d` food-at-home classes (national) and `cpi_2d_state` division 01 (states).
 
 ## Scope of "food"
 Groceries: BARANGAN SEGAR, BARANGAN KERING, BARANGAN BERBUNGKUS, MINUMAN, SUSU DAN BARANGAN BAYI (minus diapers).
@@ -34,6 +34,6 @@ Light background, deep teal and navy, amber for rises, green for falls. Plain la
 1. M1 Data foundation: fetch, clean, EDA. **(done)**
 2. M2 Index (Q1) with tests. FINDINGS_01. **(done)**
 3. M3 Drivers and basket (Q2, Q3). FINDINGS_02, 03. **(done)**
-4. M4 Validation vs DOSM CPI (Q4). FINDINGS_04.
+4. M4 Validation vs DOSM CPI (Q4). FINDINGS_04. **(done)**
 5. M5 Streamlit dashboard, deploy, README, portfolio card.
 6. M6 Stretch (Q5, Q6).

@@ -12,7 +12,8 @@ PRICECATCHER_BASE = "https://storage.data.gov.my/pricecatcher"
 MONTH_URL = PRICECATCHER_BASE + "/pricecatcher_{ym}.parquet"
 LOOKUP_ITEM_URL = PRICECATCHER_BASE + "/lookup_item.parquet"
 LOOKUP_PREMISE_URL = PRICECATCHER_BASE + "/lookup_premise.parquet"
-CPI_STATE_URL = "https://storage.dosm.gov.my/cpi/cpi_2d_state.parquet"
+CPI_STATE_URL = "https://storage.dosm.gov.my/cpi/cpi_2d_state.parquet"   # division by state
+CPI_CLASS_URL = "https://storage.dosm.gov.my/cpi/cpi_4d.parquet"         # expenditure class, Malaysia
 
 FIRST_MONTH = "2022-01"  # PriceCatcher files on data.gov.my start here
 
@@ -79,6 +80,13 @@ DOSM_CLASS_WEIGHTS = {
     "Sugar, confectionery & desserts": 0.5,
     "Ready-made food & other food products n.e.c.": 1.7,
     "Non-alcoholic beverages": 0.8,
+}
+# DOSM COICOP 2018 class codes (cpi_4d) for the classes above.
+DOSM_CLASS_CODES = {
+    "0111": "Cereals & cereal products", "0112": "Meat", "0113": "Fish & seafood",
+    "0114": "Milk, other dairy products & eggs", "0115": "Oils & fats", "0116": "Fruits & nuts",
+    "0117": "Vegetables", "0118": "Sugar, confectionery & desserts",
+    "0119": "Ready-made food & other food products n.e.c.", "0121": "Non-alcoholic beverages",
 }
 # Which DOSM class each of our categories belongs to. A class's weight is split equally
 # between our categories in it (e.g. Meat 2.3 -> Chicken 1.15, Beef & mutton 1.15).

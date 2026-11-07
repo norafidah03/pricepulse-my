@@ -56,8 +56,9 @@ def fetch_lookups() -> None:
 
 
 def fetch_cpi() -> None:
-    print("Downloading DOSM CPI by state")
+    print("Downloading DOSM CPI by state and by expenditure class")
     _download(config.CPI_STATE_URL, "cpi_2d_state.parquet")
+    _download(config.CPI_CLASS_URL, "cpi_4d.parquet")
 
 
 SOURCES = {"lookups": fetch_lookups, "prices": fetch_prices, "cpi": fetch_cpi}

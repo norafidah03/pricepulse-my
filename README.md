@@ -6,7 +6,7 @@ PricePulse MY tracks everyday food prices across Malaysia using KPDN's PriceCatc
 [data.gov.my](https://data.gov.my). It answers: how fast are observed food prices changing in each state,
 which items are driving it, and how much does the same grocery basket cost from state to state?
 
-> Status: work in progress (milestone 3 of 5: price index, drivers and basket done). See [docs/PLAN.md](docs/PLAN.md).
+> Status: work in progress (milestone 4 of 5: analysis and validation done; dashboard next). See [docs/PLAN.md](docs/PLAN.md).
 
 ## Quick start
 
@@ -18,14 +18,15 @@ python -m src.pricepulse.clean      # one price per shop, item and month -> data
 python -m src.pricepulse.index      # state food price index -> data/processed/ (~1 min)
 python -m src.pricepulse.drivers    # categories and items driving the change
 python -m src.pricepulse.basket     # 20-item grocery basket cost by state
+python -m src.pricepulse.validate   # compare with DOSM's official CPI
 pytest
-# open notebooks/01_eda.py to 03_drivers_basket.py in VS Code and run the cells
+# open notebooks/01_eda.py to 04_validation.py in VS Code and run the cells
 ```
 
 ## Data sources
 - PriceCatcher daily item prices by premise, KPDN via data.gov.my (`storage.data.gov.my/pricecatcher/`), Jan 2022 onwards
 - PriceCatcher item and premise lookups (same location)
-- Consumer Price Index by state and division, DOSM via OpenDOSM (`cpi_2d_state`), used only to check our numbers
+- Consumer Price Index by state (`cpi_2d_state`) and by expenditure class (`cpi_4d`), DOSM via OpenDOSM, used only to check our numbers
 - CPI food weights, DOSM CPI Malaysia 2024 annual publication (Table 9), used to weight categories
 
 PricePulse reports **observed price changes** in PriceCatcher. These are not official inflation statistics;
@@ -39,4 +40,6 @@ DOSM's CPI is shown separately and labelled as such.
 - Vegetables drive 2026: tomatoes are up 63% on a year earlier and lead the risers in 13 of 16 states.
 - A 20-item staples basket costs RM212.50 (Aug to Oct 2026); RM20.84 more in Putrajaya than in Kedah.
 
-Details: [FINDINGS_01](docs/FINDINGS_01.md) (index), [FINDINGS_02](docs/FINDINGS_02.md) (drivers), [FINDINGS_03](docs/FINDINGS_03.md) (basket).
+- Checked against DOSM's CPI: nationally the two agree closely (correlation 0.92, average gap 0.5 points).
+
+Details: [FINDINGS_01](docs/FINDINGS_01.md) (index), [FINDINGS_02](docs/FINDINGS_02.md) (drivers), [FINDINGS_03](docs/FINDINGS_03.md) (basket), [FINDINGS_04](docs/FINDINGS_04.md) (vs DOSM CPI).
