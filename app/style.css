@@ -1,4 +1,6 @@
 /* PricePulse MY layout details. Theme colours live in .streamlit/config.toml. */
+/* Google's colour emoji, only the basket glyph (tiny download), so the basket icon looks the same on every device. */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&text=%F0%9F%A7%BA&display=swap');
 :root {
   --pp-teal: #0F6B6B;
   --pp-teal-soft: #E7F1F1;
@@ -11,6 +13,8 @@
 }
 
 .block-container { padding-top: 4.2rem; max-width: 1180px; }
+
+a[href$="basket"] [data-testid="stIconEmoji"] { font-family: "Noto Color Emoji", sans-serif !important; }
 
 .pp-brand { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; margin: 0 0 .2rem; }
 .pp-logo { font-size: 1.25rem; color: var(--pp-navy); letter-spacing: -.01em; }

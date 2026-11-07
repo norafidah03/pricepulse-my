@@ -198,7 +198,7 @@ def page_overview() -> None:
     section("Explore")
     c1, c2, c3 = st.columns(3)
     with c1:
-        st.page_link(PAGES["basket"], label="**My Grocery Basket**: compare two states", icon=":material/shopping_basket:")
+        st.page_link(PAGES["basket"], label="**My Grocery Basket**: compare two states", icon="🧺")
     with c2:
         st.page_link(PAGES["states"], label="**Compare by State**: where prices rise fastest", icon="🗺️")
     with c3:
@@ -639,7 +639,7 @@ PAGES = {
     "overview": st.Page(page_overview, title="Overview", icon="🏠", default=True),
     "trends": st.Page(page_trends, title="Price Trends", icon="📈", url_path="trends"),
     "states": st.Page(page_states, title="Compare by State", icon="🗺️", url_path="states"),
-    "basket": st.Page(page_basket, title="Grocery Basket", icon=":material/shopping_basket:", url_path="basket"),
+    "basket": st.Page(page_basket, title="Grocery Basket", icon="🧺", url_path="basket"),
     "insights": st.Page(page_insights, title="Insights", icon="💡", url_path="insights"),
     "about": st.Page(page_about, title="About the data", icon="ℹ️", url_path="about"),
 }
