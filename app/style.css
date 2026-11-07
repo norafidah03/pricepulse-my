@@ -1,0 +1,66 @@
+/* PricePulse MY layout details. Theme colours live in .streamlit/config.toml. */
+:root {
+  --pp-teal: #0F6B6B;
+  --pp-teal-soft: #E7F1F1;
+  --pp-navy: #14294B;
+  --pp-slate: #5A6B7B;
+  --pp-amber: #A35F00;   /* text-safe amber (4.5:1 on white) */
+  --pp-green: #2E7D4F;
+  --pp-line: #E3E8EB;
+  --pp-bg-soft: #F3F6F7;
+}
+
+.block-container { padding-top: 4.2rem; max-width: 1180px; }
+
+.pp-brand { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; margin: 0 0 .2rem; }
+.pp-logo { font-size: 1.25rem; color: var(--pp-navy); letter-spacing: -.01em; }
+.pp-logo b { color: var(--pp-teal); }
+.pp-brand-sub { color: var(--pp-slate); font-size: .9rem; }
+
+.pp-hero { background: linear-gradient(135deg, var(--pp-navy) 0%, #173a5c 55%, var(--pp-teal) 100%);
+  color: #fff; border-radius: 14px; padding: 1.8rem 1.8rem 1.5rem; margin: .4rem 0 1.2rem; }
+.pp-hero h1 { color: #fff; font-size: clamp(1.6rem, 3.4vw, 2.4rem); line-height: 1.15; margin: .2rem 0 .6rem; padding: 0; }
+.pp-hero p { color: #DCE7EC; font-size: 1.02rem; max-width: 760px; margin: 0 0 .9rem; }
+.pp-eyebrow { text-transform: uppercase; letter-spacing: .08em; font-size: .78rem; color: #9FD3D0; font-weight: 600; }
+.pp-stamp { display: inline-block; background: rgba(255,255,255,.12); border-radius: 999px; padding: .25rem .8rem;
+  font-size: .85rem; color: #fff; }
+
+.pp-lead { font-size: 1.15rem; color: var(--pp-navy); line-height: 1.5; margin: .4rem 0 1rem; }
+.pp-lead b.up { color: var(--pp-amber); }
+.pp-lead b.down { color: var(--pp-green); }
+
+.pp-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: .8rem; margin: .4rem 0 1.2rem; }
+.pp-tile { border: 1px solid var(--pp-line); border-radius: 12px; padding: .9rem 1rem; background: #fff; }
+.pp-tile-label { color: var(--pp-slate); font-size: .85rem; margin-bottom: .25rem; }
+.pp-tile-value { color: var(--pp-navy); font-size: 1.55rem; font-weight: 700; line-height: 1.2; }
+.pp-tile-note { color: var(--pp-slate); font-size: .82rem; margin-top: .2rem; }
+.pp-tile.up { border-top: 4px solid #C77700; }
+.pp-tile.up .pp-tile-value { color: var(--pp-amber); }
+.pp-tile.down { border-top: 4px solid var(--pp-green); }
+.pp-tile.down .pp-tile-value { color: var(--pp-green); }
+.pp-tile.flat { border-top: 4px solid var(--pp-line); }
+
+.pp-h2 { color: var(--pp-navy); font-size: 1.45rem; margin: 1.2rem 0 .1rem; padding: 0; }
+.pp-sub { color: var(--pp-slate); margin: 0 0 .8rem; }
+.pp-chart-title { color: var(--pp-navy); font-size: 1.05rem; font-weight: 600; margin: .8rem 0 .1rem; padding: 0; line-height: 1.35; }
+.pp-note { color: var(--pp-slate); font-size: .85rem; margin: -.3rem 0 1rem; line-height: 1.45; }
+
+.pp-callout { background: var(--pp-teal-soft); border-left: 4px solid var(--pp-teal); border-radius: 8px;
+  padding: .75rem 1rem; color: var(--pp-navy); font-size: .95rem; margin: .4rem 0 1rem; }
+
+.pp-insight { border: 1px solid var(--pp-line); border-radius: 12px; padding: 1rem 1.2rem .4rem; margin: 1.2rem 0 0; background: #fff; }
+.pp-insight h3 { color: var(--pp-navy); font-size: 1.15rem; margin: 0 0 .3rem; padding: 0; }
+.pp-insight p { color: #2C3E50; margin: 0 0 .6rem; line-height: 1.5; }
+
+.pp-about h3 { color: var(--pp-navy); font-size: 1.1rem; margin: 1.1rem 0 .3rem; padding: 0; }
+.pp-about p, .pp-about li { color: #2C3E50; line-height: 1.55; }
+.pp-about a, .pp-footer a { color: var(--pp-teal); }
+
+.pp-footer { border-top: 1px solid var(--pp-line); margin-top: 2rem; padding-top: .8rem; color: var(--pp-slate); font-size: .82rem; }
+
+@media (max-width: 640px) {
+  .block-container { padding-left: 1rem; padding-right: 1rem; }
+  .pp-hero { padding: 1.2rem 1.1rem 1rem; }
+  .pp-tile-value { font-size: 1.3rem; }
+  .pp-brand-sub { display: none; }
+}

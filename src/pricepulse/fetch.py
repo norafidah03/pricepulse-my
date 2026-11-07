@@ -61,7 +61,12 @@ def fetch_cpi() -> None:
     _download(config.CPI_CLASS_URL, "cpi_4d.parquet")
 
 
-SOURCES = {"lookups": fetch_lookups, "prices": fetch_prices, "cpi": fetch_cpi}
+def fetch_geo() -> None:
+    print("Downloading state boundaries (DOSM open data)")
+    _download(config.STATE_GEOJSON_URL, "state.geojson")
+
+
+SOURCES = {"lookups": fetch_lookups, "prices": fetch_prices, "cpi": fetch_cpi, "geo": fetch_geo}
 
 if __name__ == "__main__":
     wanted = sys.argv[1:] or list(SOURCES)

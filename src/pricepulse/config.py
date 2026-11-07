@@ -14,6 +14,7 @@ LOOKUP_ITEM_URL = PRICECATCHER_BASE + "/lookup_item.parquet"
 LOOKUP_PREMISE_URL = PRICECATCHER_BASE + "/lookup_premise.parquet"
 CPI_STATE_URL = "https://storage.dosm.gov.my/cpi/cpi_2d_state.parquet"   # division by state
 CPI_CLASS_URL = "https://storage.dosm.gov.my/cpi/cpi_4d.parquet"         # expenditure class, Malaysia
+STATE_GEOJSON_URL = "https://raw.githubusercontent.com/dosm-malaysia/data-open/main/datasets/geodata/administrative_1_state.geojson"
 
 FIRST_MONTH = "2022-01"  # PriceCatcher files on data.gov.my start here
 

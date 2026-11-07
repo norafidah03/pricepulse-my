@@ -1,0 +1,29 @@
+{
+  "latest_observation": "2026-11-07",
+  "last_complete_month": "2026-10",
+  "window_label": "Aug to Oct 2026",
+  "year_ago_label": "Aug to Oct 2025",
+  "base_month": "2022-01",
+  "shops_last_month": 2141,
+  "items_last_month": 292,
+  "dosm_last_month": "2026-09",
+  "gaps": [
+    "30 Sep to 9 Oct 2026: no PriceCatcher data published"
+  ],
+  "category_weights": {
+    "Rice": 1.15,
+    "Flour, bread & noodles": 1.15,
+    "Chicken": 1.15,
+    "Beef & mutton": 1.15,
+    "Fish & seafood": 3.9,
+    "Milk & baby food": 0.65,
+    "Eggs": 0.65,
+    "Cooking oil": 0.7,
+    "Fruit & coconut": 1.1,
+    "Vegetables": 0.9,
+    "Onions, chilli & spices": 0.9,
+    "Sugar, spreads & nuts": 0.5,
+    "Sauces": 1.7,
+    "Drinks": 0.8
+  }
+}

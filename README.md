@@ -6,7 +6,11 @@ PricePulse MY tracks everyday food prices across Malaysia using KPDN's PriceCatc
 [data.gov.my](https://data.gov.my). It answers: how fast are observed food prices changing in each state,
 which items are driving it, and how much does the same grocery basket cost from state to state?
 
-> Status: work in progress (milestone 4 of 5: analysis and validation done; dashboard next). See [docs/PLAN.md](docs/PLAN.md).
+**Live dashboard:** _add the Streamlit link here after deploying_
+
+![PricePulse MY overview](reports/dashboard/overview.png)
+
+See [docs/PLAN.md](docs/PLAN.md).
 
 ## Quick start
 
@@ -19,15 +23,32 @@ python -m src.pricepulse.index      # state food price index -> data/processed/ 
 python -m src.pricepulse.drivers    # categories and items driving the change
 python -m src.pricepulse.basket     # 20-item grocery basket cost by state
 python -m src.pricepulse.validate   # compare with DOSM's official CPI
+python -m src.pricepulse.build      # writes the small tables the dashboard reads into app/data/
 pytest
 # open notebooks/01_eda.py to 04_validation.py in VS Code and run the cells
+streamlit run app/streamlit_app.py
 ```
+
+## Dashboard
+Six pages: **Overview**, **Price Trends** (230 items since 2022), **Compare by State** (map and ranking, with
+what drives each state), **Grocery Basket** (the *My Grocery Basket* calculator: pick items and quantities,
+choose two states, compare the cost item by item), **Insights** and **About the data**.
+
+`app/streamlit_app.py` reads only `app/data/` (about 1.3 MB, committed), so it runs on Streamlit Community Cloud
+without downloading anything. To refresh with new data: `fetch`, `clean`, `index`, `drivers`, `basket`,
+`validate`, `build`, then commit `app/data/`.
+
+### Deploy on Streamlit Community Cloud
+1. Push this repo to GitHub (including `app/data/` and `.streamlit/config.toml`).
+2. On share.streamlit.io choose **Create app**, pick the repo, branch `main`, main file `app/streamlit_app.py`.
+3. Deploy, then paste the app link at the top of this README.
 
 ## Data sources
 - PriceCatcher daily item prices by premise, KPDN via data.gov.my (`storage.data.gov.my/pricecatcher/`), Jan 2022 onwards
 - PriceCatcher item and premise lookups (same location)
 - Consumer Price Index by state (`cpi_2d_state`) and by expenditure class (`cpi_4d`), DOSM via OpenDOSM, used only to check our numbers
 - CPI food weights, DOSM CPI Malaysia 2024 annual publication (Table 9), used to weight categories
+- State boundaries, DOSM open data (`administrative_1_state.geojson`)
 
 PricePulse reports **observed price changes** in PriceCatcher. These are not official inflation statistics;
 DOSM's CPI is shown separately and labelled as such.
