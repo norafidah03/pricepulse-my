@@ -85,3 +85,12 @@ def test_dosm_weights_cover_every_category_and_split_classes():
     assert set(w) == set(config.GROCERY_CATEGORIES.values())
     assert w["Chicken"] == w["Beef & mutton"] == pytest.approx(2.3 / 2)
     assert sum(w.values()) == pytest.approx(sum(config.DOSM_CLASS_WEIGHTS.values()))
+
+
+def test_changes_align_by_date_when_months_are_missing():
+    months = list(pd.date_range("2022-01-01", periods=13, freq="MS"))
+    del months[5]  # a gap in June 2022
+    idx = add_changes(pd.DataFrame({"month": months, "item": 1, "index": 100.0 + np.arange(12)}), ["item"])
+    last = idx.iloc[-1]
+    # Jan 2023 (index 111) vs Jan 2022 (index 100), not vs the row 12 places earlier
+    assert last["yoy_pct"] == pytest.approx(11.0)

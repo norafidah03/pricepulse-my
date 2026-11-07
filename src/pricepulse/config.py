@@ -109,3 +109,36 @@ def _category_weights() -> dict[str, float]:
 
 # Weights used in the state index (normalised to sum to 1 when used). Set to None for equal weights.
 CATEGORY_WEIGHTS: dict[str, float] | None = _category_weights()
+
+# ---- Grocery basket (M3) ----
+# One of each item, priced at the state's median shop price. Chosen because every state has at least
+# BASKET_MIN_SHOPS shops pricing it in every comparison window since 2022 (checked in notebook 03).
+# item_code -> plain-English label shown on the dashboard.
+BASKET_ITEMS = {
+    1: "Chicken, standard (1 kg)",
+    1110: "Eggs, grade B (30)",
+    70: "Fish, ikan selar (1 kg)",
+    191: "Sardines in tomato sauce, Cap Ayam (425 g)",
+    1601: "Cooking oil, Cap Buruh (2 kg)",
+    1589: "White sugar, coarse (1 kg)",
+    917: "Wheat flour, Cap Sauh (1 kg)",
+    1976: "Instant noodles, Maggi curry (5 x 79 g)",
+    129: "Yellow onion (1 kg)",
+    1564: "Garlic, imported (1 kg)",
+    1899: "Dried chilli (1 kg)",
+    114: "Tomato (1 kg)",
+    113: "Cucumber (1 kg)",
+    109: "Carrot (1 kg)",
+    1131: "Potato, imported (1 kg)",
+    1611: "Coconut milk, Kara (200 ml)",
+    214: "Sweet soy sauce, Kipas Udang (345 ml)",
+    180: "Tea bags, BOH (100)",
+    929: "Instant coffee, Nescafe Classic (200 g)",
+}
+# Rice has no single brand sold in every state (Sabah and Sarawak sell different brands), so the basket
+# uses the median price of any 10 kg imported white rice pack in the state. Flagged on the dashboard.
+BASKET_RICE_LABEL = "Rice, imported white, any brand (10 kg)*"
+BASKET_RICE_CATEGORY = "BERAS"
+BASKET_RICE_UNIT = "10 kg"
+BASKET_MIN_SHOPS = 2      # shops per state per item in a 3-month window
+BASKET_WINDOW = 3         # months pooled for each basket price (e.g. Aug to Oct)

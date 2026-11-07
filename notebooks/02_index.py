@@ -34,7 +34,7 @@ print(f"Index runs Jan 2022 = 100 to {LAST:%b %Y}")
 # %%
 nat = state[state["state"] == "Malaysia"]
 fig = px.line(nat, x="month", y="index", title="Observed grocery prices, Malaysia (Jan 2022 = 100)")
-fig.write_html(REPORTS / "02_national_index.html")
+fig.write_html(REPORTS / "02_national_index.html", include_plotlyjs="cdn")
 nat.set_index("month")[["index", "yoy_pct", "yoy3m_pct"]].iloc[::6].round(1)
 
 # %% [markdown]
@@ -46,7 +46,7 @@ nat.set_index("month")[["index", "yoy_pct", "yoy3m_pct"]].iloc[::6].round(1)
 now = state[state["month"] == LAST].sort_values("yoy3m_pct")
 fig = px.bar(now, x="yoy3m_pct", y="state", orientation="h",
              title=f"Change in observed grocery prices, Aug to Oct 2026 vs a year earlier (%)")
-fig.write_html(REPORTS / "02_states_now.html")
+fig.write_html(REPORTS / "02_states_now.html", include_plotlyjs="cdn")
 now[["state", "index", "yoy_pct", "yoy3m_pct"]].round(1)
 
 # %% [markdown]
@@ -59,7 +59,7 @@ c = yoy_contributions(state, contrib, LAST)
 table = c.pivot(index="category", columns="state", values="pp").round(2)
 fig = px.imshow(table, color_continuous_scale="RdBu_r", color_continuous_midpoint=0, aspect="auto",
                 title="Contribution to year-on-year change, Oct 2026 (percentage points)")
-fig.write_html(REPORTS / "02_drivers_heatmap.html")
+fig.write_html(REPORTS / "02_drivers_heatmap.html", include_plotlyjs="cdn")
 table[["Malaysia", "Kedah", "Kelantan", "Sabah", "W.P. Labuan"]]
 
 # %% [markdown]
@@ -91,5 +91,5 @@ coverage[coverage["month"] == LAST].sort_values("imputed_share")[["state", "item
 # %%
 nat_cat = category[category["state"] == "Malaysia"]
 fig = px.line(nat_cat, x="month", y="index", color="category", title="Observed grocery prices by category, Malaysia (Jan 2022 = 100)")
-fig.write_html(REPORTS / "02_categories.html")
+fig.write_html(REPORTS / "02_categories.html", include_plotlyjs="cdn")
 nat_cat[nat_cat["month"] == LAST].sort_values("index", ascending=False)[["category", "index", "yoy_pct", "yoy3m_pct"]].round(1)

@@ -51,7 +51,7 @@ gaps[gaps["count"] >= 3].rename(columns={"min": "from", "max": "to", "count": "d
 
 # %%
 fig = px.bar(daily, x="date", y="rows", title="Raw price rows per day")
-fig.write_html(REPORTS / "01_rows_per_day.html")
+fig.write_html(REPORTS / "01_rows_per_day.html", include_plotlyjs="cdn")
 fig
 
 # %% [markdown]
@@ -61,7 +61,7 @@ fig
 # %%
 shops = grocery.groupby(["month", "state"])["premise_code"].nunique().rename("shops").reset_index()
 fig = px.line(shops, x="month", y="shops", color="state", title="Shops reporting grocery prices, by state")
-fig.write_html(REPORTS / "01_shops_by_state.html")
+fig.write_html(REPORTS / "01_shops_by_state.html", include_plotlyjs="cdn")
 shops.pivot(index="state", columns="month", values="shops").iloc[:, [0, 12, 24, 36, 48, -2]]
 
 # %% [markdown]
@@ -78,7 +78,7 @@ matched = pd.Series(
 )
 print(f"Median share of pairs also seen the month before: {matched.median():.0%}; lowest {matched.min():.0%} in {matched.idxmin():%b %Y}")
 fig = px.line(matched.reset_index(), x="month", y="matched_share", title="Share of shop x item prices that can be matched to the previous month")
-fig.write_html(REPORTS / "01_matched_share.html")
+fig.write_html(REPORTS / "01_matched_share.html", include_plotlyjs="cdn")
 fig
 
 # %% [markdown]
@@ -110,5 +110,5 @@ staples = (
 )
 staples["item"] = staples["item_code"].map(STAPLES)
 fig = px.line(staples, x="month", y="price", color="item", title="National median shop price (RM)")
-fig.write_html(REPORTS / "01_staples.html")
+fig.write_html(REPORTS / "01_staples.html", include_plotlyjs="cdn")
 staples.pivot(index="item", columns="month", values="price").iloc[:, [0, 12, 24, 36, 48, -2]].round(2)

@@ -105,21 +105,28 @@ def chain(links: pd.DataFrame, keys: list[str], base: str = config.INDEX_BASE) -
 
 
 def add_changes(idx: pd.DataFrame, keys: list[str]) -> pd.DataFrame:
-    """Changes of an index, all in %.
+    """Changes of an index, all in %. Months are aligned by date, so gaps in a series give NaN, not wrong values.
 
     yoy_pct    this month vs the same month a year earlier
     yoy3m_pct  average of the last 3 months vs the same 3 months a year earlier
                (smoother than yoy_pct, and fair to seasonal items: the headline measure)
     ann3m_pct  last 3 months' change, annualised (very noisy for food; kept for reference)
     """
-    idx = idx.sort_values(keys + ["month"]).copy()
-    g = idx.groupby(keys)["index"] if keys else idx["index"]
-    avg3 = g.transform(lambda x: x.rolling(3).mean()) if keys else g.rolling(3).mean()
-    avg3_prev = avg3.groupby([idx[k] for k in keys]).shift(12) if keys else avg3.shift(12)
-    idx["yoy_pct"] = 100 * (idx["index"] / g.shift(12) - 1)
-    idx["yoy3m_pct"] = 100 * (avg3 / avg3_prev - 1)
-    idx["ann3m_pct"] = 100 * ((idx["index"] / g.shift(3)) ** 4 - 1)
-    return idx
+    idx = idx.copy()
+    tmp_key = "_series"
+    idx[tmp_key] = idx[keys].astype(str).agg("|".join, axis=1) if keys else "all"
+    wide = idx.pivot(index="month", columns=tmp_key, values="index")
+    wide = wide.reindex(pd.date_range(wide.index.min(), wide.index.max(), freq="MS"))
+    avg3 = wide.rolling(3).mean()  # NaN unless all 3 months exist
+    changes = {
+        "yoy_pct": 100 * (wide / wide.shift(12) - 1),
+        "yoy3m_pct": 100 * (avg3 / avg3.shift(12) - 1),
+        "ann3m_pct": 100 * ((wide / wide.shift(3)) ** 4 - 1),
+    }
+    for name, frame in changes.items():
+        long = frame.rename_axis(index="month", columns=tmp_key).stack(future_stack=True).rename(name).reset_index()
+        idx = idx.merge(long, on=["month", tmp_key], how="left")
+    return idx.drop(columns=tmp_key).sort_values(keys + ["month"]).reset_index(drop=True)
 
 
 def prepare(monthly: pd.DataFrame, premises: pd.DataFrame, items: pd.DataFrame, scope: str) -> pd.DataFrame:
@@ -154,9 +161,14 @@ def build_index(df: pd.DataFrame, last_month: pd.Timestamp) -> dict[str, pd.Data
         ["state", "category"],
     )
     item_idx = add_changes(chain(nat_items[["month", "item_code", "log_link"]], ["item_code"]), ["item_code"])
+    # Item index per state, keeping how many matched shops each month had (imputed months borrow the national link).
+    state_item_idx = add_changes(chain(links[["month", "state", "item_code", "log_link"]], ["state", "item_code"]),
+                                 ["state", "item_code"])
+    state_item_idx = state_item_idx.merge(links[["month", "state", "item_code", "n_pairs", "imputed"]],
+                                          on=["month", "state", "item_code"], how="left")
     contrib = pd.concat([state_contrib, nat_contrib])
     coverage = links.groupby(["month", "state"]).agg(items=("item_code", "size"), imputed_share=("imputed", "mean")).reset_index()
-    return {"state": state_idx, "category": cat_idx, "item": item_idx, "contrib": contrib, "coverage": coverage,
+    return {"state": state_idx, "category": cat_idx, "item": item_idx, "state_item": state_item_idx, "contrib": contrib, "coverage": coverage,
             "weights": w.rename("weight").rename_axis("category").reset_index()}
 
 
