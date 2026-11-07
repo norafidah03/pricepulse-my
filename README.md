@@ -6,7 +6,7 @@ PricePulse MY tracks everyday food prices across Malaysia using KPDN's PriceCatc
 [data.gov.my](https://data.gov.my). It answers: how fast are observed food prices changing in each state,
 which items are driving it, and how much does the same grocery basket cost from state to state?
 
-**Live dashboard:** _add the Streamlit link here after deploying_
+**Live dashboard:** https://pricepulse-my-ck5moh8rzyijjgesze2rp9.streamlit.app/
 
 ![PricePulse MY overview](reports/dashboard/overview.png)
 
