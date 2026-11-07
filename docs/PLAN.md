@@ -17,14 +17,14 @@ The full, editable plan lives in the project doc. This is the short version kept
 2. Flag prices more than 3x or less than 1/3 of the item's national median that month.
 3. Matched pairs: a shop's price for an item this month vs the same shop last month.
 4. Item index per state = geometric mean of those price relatives (Jevons), chained, Jan 2022 = 100.
-5. Categories and a state food index with fixed weights (DOSM CPI food weights; equal weights as fallback).
-6. Year-on-year, 3-month annualised change, and each category's contribution in percentage points.
+5. 14 categories, equal weight each (DOSM sub-group weights are not published as data; configurable).
+6. Headline: last 3 months vs the same 3 months a year earlier. Plus each category's contribution in percentage points.
 7. Staples basket (~20 items) priced at each state's median.
 8. Validate against DOSM `cpi_2d_state` division 01.
 
 ## Scope of "food"
 Groceries: BARANGAN SEGAR, BARANGAN KERING, BARANGAN BERBUNGKUS, MINUMAN, SUSU DAN BARANGAN BAYI (minus diapers).
-Eating out (separate index): MAKANAN SIAP MASAK. Not used: household/personal care and convenience-store items.
+Eating out (MAKANAN SIAP MASAK) is only published Jan to May 2022, so it is dropped. Not used: household/personal care and convenience-store items.
 
 ## Dashboard (from the design brief)
 Overview · Price Trends · Compare by State (map + ranked bars) · Grocery Basket · Insights · About the data.
@@ -32,7 +32,7 @@ Light background, deep teal and navy, amber for rises, green for falls. Plain la
 
 ## Milestones
 1. M1 Data foundation: fetch, clean, EDA. **(done)**
-2. M2 Index (Q1) with tests. FINDINGS_01.
+2. M2 Index (Q1) with tests. FINDINGS_01. **(done)**
 3. M3 Drivers and basket (Q2, Q3). FINDINGS_02, 03.
 4. M4 Validation vs DOSM CPI (Q4). FINDINGS_04.
 5. M5 Streamlit dashboard, deploy, README, portfolio card.
